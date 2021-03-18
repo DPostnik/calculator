@@ -1,0 +1,8 @@
+<div class="calculator">
+  <input type="text" class="info">
+  <div class="btn_container">
+    <app-button *ngFor="let symbol of symbols"
+      [buttonValue]=symbol>
+    </app-button>
+  </div>
+</div>
