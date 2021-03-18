@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalculatorComponent implements OnInit {
 
+  value: string ="";
   public symbols = [
     'OFF','+/-','√','%','MRC','M-','M+','-','7','8','9','x','4','5','6','-','1','2','3','+','0','.','='
   ]
@@ -16,4 +17,7 @@ export class CalculatorComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  handleButtonValue(value: string) {
+    this.value += value;
+  }
 }

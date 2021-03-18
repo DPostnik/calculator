@@ -1,4 +1,1 @@
-<button class="btn" *ngIf="buttonValue!='+';else big_btn">{{buttonValue}}</button>
-<ng-template #big_btn>
-  <button class="big_btn btn">{{buttonValue}}</button>
-</ng-template>
+<button class="btn" (click)="addValueButton(buttonValue)">{{buttonValue}}</button>

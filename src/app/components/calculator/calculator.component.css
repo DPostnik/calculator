@@ -1,6 +1,9 @@
 .calculator{
-  width: 400px;
-  height:500px;
+  width: 432px;
+  height:300px;
+  margin: 0 auto;
+  border: 1px solid black;
+  padding: 40px 20px 10px 20px;
 }
 
 .btn_container{
@@ -10,5 +13,7 @@
 }
 
 .info{
-
+  margin-bottom: 10px;
+  width:416px;
+  height:40px;
 }
