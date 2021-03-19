@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-display',
@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DisplayComponent implements OnInit {
 
+  @Input() value: string;
   constructor() { }
 
   ngOnInit(): void {
   }
+
+
 
 }
