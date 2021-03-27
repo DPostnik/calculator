@@ -1,6 +1,12 @@
 .info{
-  margin-bottom: 10px;
-  width:416px;
-  height:40px;
+  width:340px;
+  height:100px;
   text-align: right;
+  border:5px solid #06568d;
+  border-radius: 10px;
+  font-size: 60px;
+}
+
+.container__display{
+  margin: 0 auto 10px auto;
 }

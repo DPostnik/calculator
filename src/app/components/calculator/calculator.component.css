@@ -1,19 +1,17 @@
 .calculator{
-  width: 432px;
-  height:300px;
+  width: 360px;
+  height:500px;
   margin: 0 auto;
-  border: 1px solid black;
-  padding: 40px 20px 10px 20px;
+  border: 5px solid #06568d;
+  background: linear-gradient(180deg, #4EA4DC 51.6%, #081925 161.2%);
+  padding: 80px 20px 0 20px;
+  border-radius: 20px;
 }
 
 .btn_container{
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.info{
-  margin-bottom: 10px;
-  width:416px;
-  height:40px;
+  width:344px;
+  margin: 0 auto;
+  display:grid;
+  grid-template-columns: 87px 87px 87px 87px;
+  grid-template-rows: 46px 60px 60px 60px 60px;
 }
