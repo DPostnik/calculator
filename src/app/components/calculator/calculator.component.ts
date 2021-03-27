@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {AppService} from "../../shared/service/app.service";
 
 @Component({
   selector: 'app-calculator',
@@ -7,17 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalculatorComponent implements OnInit {
 
-  value: string ="";
-  public symbols = [
-    'OFF','+/-','√','%','MRC','M-','M+','-','7','8','9','x','4','5','6','-','1','2','3','+','0','.','='
-  ]
-
-  constructor() { }
+  public value = '';
+  constructor(public service: AppService) { }
 
   ngOnInit(): void {
   }
 
-  handleButtonValue(value: string) {
-    this.value += value;
+  handleButtonValue(value) {
+    this.value = this.service.handleData(value);
   }
 }

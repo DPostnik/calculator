@@ -1,1 +1,8 @@
-<button class="btn" (click)="addValueButton(buttonValue)">{{buttonValue}}</button>
+<button class="btn"
+        [ngClass]="{
+          'big_btn' : buttonValue == '+',
+          'small_btn' : buttonValue === 'OFF'||buttonValue ==='+/-'||buttonValue ==='%'||buttonValue ==='√',
+          'last_btn': buttonValue ==='0'||buttonValue ==='.'||buttonValue ==='='
+          }"
+        (click)="addValueButton(buttonValue)">{{buttonValue}}</button>
+

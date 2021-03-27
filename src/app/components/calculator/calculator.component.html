@@ -1,7 +1,8 @@
 <div class="calculator">
-  <input type="text" readonly class="info" value="{{value}}">
+  <app-display [value]="value"></app-display>
+
   <div class="btn_container">
-    <app-button *ngFor="let symbol of symbols"
+    <app-button *ngFor="let symbol of service.symbols"
        [buttonValue]=symbol
           (getButtonValue)="handleButtonValue($event)"
     >
