@@ -1,183 +1,193 @@
 import {Injectable} from "@angular/core";
+import {DataService} from "./data.service";
+import {Data} from "../interfaces";
 
 @Injectable({
   providedIn:'root'
 })
 export class AppService {
 
+  constructor(private data: DataService) {
+
+  }
+
   public symbols = [
     'OFF', '+/-', '√', '%', 'MRC', 'M-', 'M+', '/', '7', '8', '9', 'x', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='
   ]
 
   private numbers =[
-     '7', '8', '9'
+    '7', '8', '9'
     , '4', '5', '6'
     , '1', '2', '3'
     , '0'
     , '.'
   ]
   private selfOperations = [
-    '+/-','M-', 'M+',  '√'
+    '+/-','M-', 'M+',  '√', 'MRC'
+  ]
+
+  private defOperators = [
+    '+','-','x','/','%'
   ]
 
   private counterMRC = 0;
-  private memoryValue = '';
+  private memoryValue = 0;
   private op = '';
-  private op1 = false;
   private num1 ='';
-  private num1f = false;
+  private numbersCounter = 0;
   private num2 ='';
-  private firstAction = false;
+  private isInputEmpty = true;
+  private first = true;
+  private dataString = '';
 
   handleData(value: string){
-    if(value == 'OFF'){ // выключаем + очищаем
-      this.num1f = false;
-      this.num1 = '';
-      this.memoryValue = '';
-      this.num2 = '';
-      this.op = '';
-      this.op1 = false;
-      this.counterMRC = 0;
-      this.firstAction = false;
-      return '';
-    }
-
+    this.dataString +=value;
+    let resultStr = '';
     if(value != 'MRC'){ // если не mrc очищаем счётчик
       this.counterMRC = 0;
     }
-    if(this.numbers.includes(value)) { // если цифарка
-      if(this.firstAction){ // если действие первое(после =)
-       this.num1 = '';
-       this.num1f = false;
-       this.firstAction = false;
-      }
-        if (this.num1f) { // если первое число записано
-          if (this.op1 && value == '.' && this.num2 == '') { //если . то добавляем 0
-            this.num2 = '0' + value;
-          } else {
-            this.num2 += value;
-          }
-        } else {
-          if (value == '.' && this.num1 == '')
-            this.num1 = '0' + value;
-          else {
-            this.num1 += value;
-          }
-        }
+    if(value == 'OFF'){
+      this.isInputEmpty = true;
+      this.memoryValue = 0;
+      this.num1 = '';
+      this.num2 = '';
+      this.counterMRC = 0;
+      this.op = '';
+      this.numbersCounter = 0;
+      return '';
     }else{
-      this.firstAction = false;
-      if(this.selfOperations.includes(value)){ // операции проводимые к числу к которому применяются
-        if(this.num2){
-          this.num2 = this.handleSelfOperations(value, this.num2);//если второе число записано то к нему
-        }else{
-          this.num1 = this.handleSelfOperations(value, this.num1);
-          this.num1f = false;
+      if(this.isInputEmpty){
+        if(this.defOperators.includes(value) || (this.selfOperations.includes(value) && value!='MRC') || value == '='){
+          return '';
         }
-      }else{
-        if(value == 'MRC'){
-          if(this.counterMRC === 1) // если второй нажато очищается
-          {
-            this.memoryValue = '';
-            this.counterMRC = 0;
-            this.num1 = '';
-          }else{
-            if(!this.op){ // если нету оператора то в первое иначе во второе
-              this.num1 = this.memoryValue;
+        else{
+          if(value=='MRC'){
+            if(this.num2){
+              this.num2 = this.memoryValue.toString();
             }
             else{
-              if(this.num1){
-                this.num2 = this.memoryValue;
-              }else {
-                this.num1 = this.memoryValue;
-              }
+              this.num1 = this.memoryValue.toString();
             }
-            this.counterMRC++;
           }
-        }else{ // если не mrc
-          if(!this.op){ //если нету оператора, записываем его и показываем окончание первого числа
-            this.op = value;
-            this.num1f = true;
-            this.op1 = true;
-          }else{
-            switch(value){ // иначе выполняем преобразование и записываем результат в первое число
-              case '=':{
-                value='';
-                this.count(value);
-                this.op1 = false;
-                this.firstAction = true; // тут показываем что наше число можно изменить на другое(типо если мы будем исать другое число)
-                break;
+          if(value == '.'){
+            return '';
+          } else{
+            this.isInputEmpty = false;
+            this.numbersCounter = 1;
+            this.num1 = value.toString();
+          }
+        }
+      }else{
+        switch(this.numbersCounter){
+          case 1:{
+            if(this.numbers.includes(value)){
+              if((this.num1.includes('.') && value != '.') || !this.num1.includes('.')){
+                if(this.num1.length <= 5)
+                  this.num1 += value.toString();
               }
-              case 'x':{
-                value='*';//символ на клаве х становится * в выражение
+            }else if(this.defOperators.includes(value)){
+              this.op = value.toString();
+              this.numbersCounter = 2;
+            }else if(this.selfOperations.includes(value)){
+              this.handleSelfOperations(value);
+            }
+            break;}
+          case 2:{
+            if(this.numbers.includes(value)){
+              if((this.num2.includes('.') && value != '.') || (!this.num2.includes('.') && this.num2!='') || (this.num2 == '' && value != '.')){
+                if(this.num2.length <= 5)
+                  this.num2 += value.toString();
               }
-              default:{
-                this.count(value);
+            }else if(this.defOperators.includes(value) || value == '='){
+              if(this.num2 != ''){
+                this.calculateDefOperations(value);
+              }
+              else{
+                this.op = value.toString();
+              }
+            }else if(this.selfOperations.includes(value)){
+              if(this.num2 != ''){
+                this.calculateDefOperations('=');
+                this.handleSelfOperations(value);
+              }else{
+                this.handleSelfOperations(value)
               }
             }
+            break;
           }
         }
       }
-    }
-    let str = '';
-    if(this.num1!==''){ // добавляем в результирующиую строку потиху символы
-      str+=this.num1;
-      if(this.op){
-          str+=this.op;
-          if(this.num2){
-            str+=this.num2;
-          }
-      }
-    }else{
-      str='0';
-    }
-
-    return str;
-  }
-
-  count(value){
-    if(!this.op1){ // если сюда придёт один операнд и один оператор, то выходим
-      this.op = value;
-      this.op1 = true;
-    }else{
-      if(this.op=='x') {
-        this.op = '*';
-      }
-      this.num1 = eval(`${this.num1} ${this.op} ${this.num2}`);
-
-      this.op = value;
-      this.num2 = '';
-      this.num1f = true;
+      resultStr = this.num1 + this.op + this.num2;
+      return resultStr.slice(0,15);
+      // return resultStr;
     }
   }
 
-  handleSelfOperations(value, temp){
-    switch(value){
-      case '+/-':{
-        if(temp[0]=='-'){ // приводим число к его -(х)
-          let numb = eval(temp);
-          numb = -numb;
-          temp = numb.toString();
-        }else
-        temp = '-' + temp;
+  calculateDefOperations(nextOperation: string){
+    switch(this.op){
+      case '+':{
+        this.num1 = (Number(this.num1) + Number(this.num2)).toString();
         break;
       }
-      case 'M-':{ // вычитаем из числа(в нашей памяти) последнее число на экране и обнуляем последнее число
-        let numb = +this.memoryValue;
-        numb -= +temp;
-        this.memoryValue = numb.toString();
-        return '';
+      case '-':{
+        this.num1 = (Number(this.num1) - Number(this.num2)).toString();
+        break;
       }
-      case 'M+':{ // добавляем к числу(в нашей памяти) последнее число на экране и обнуляем последнее число
-        let numb = +this.memoryValue;
-        numb += +temp;
-        this.memoryValue = numb.toString();
-        return '';
+      case 'x':{
+        this.num1 = (Number(this.num1) * Number(this.num2)).toString();
+        break;
       }
-      default: { // Берём корень нашего последнего числа
-        temp = Math.sqrt(eval(temp));
+      case '/':{
+        this.num1 = (Number(this.num1) / Number(this.num2)).toString();
+        break;
+      }
+      case '%':{
+        this.num1 = (Number(this.num1)/100*Number(this.num2)).toString();
+        break;
       }
     }
-    return temp;
+    this.num2 = '';
+    if(nextOperation == '='){
+      this.op = '';
+      this.numbersCounter = 1;
+    }
+    else{
+      this.op = nextOperation;
+    }
+
+  }
+
+  handleSelfOperations(operation: string){
+    switch(operation){
+      case '√':{
+        this.num1 = Math.sqrt(Number(this.num1)).toString();
+        break;
+      }
+      case '+/-':{
+        this.num1 = (Number(this.num1)*(-1)).toString();
+        break;
+      }
+      case 'M-':{
+        this.memoryValue -= Number(this.num1);
+        break;
+      }
+      case 'M+':{
+        this.memoryValue += eval(this.num1);
+        break;
+      }
+      case 'MRC':{
+        if(this.counterMRC == 0){
+          if(this.op)
+            this.num2 = this.memoryValue.toString();
+          else
+            this.num1 = this.memoryValue.toString();
+          this.counterMRC++;
+        }else{
+          this.memoryValue = 0;
+          this.counterMRC = 0;
+          this.num1 = '0';
+        }
+      }
+    }
   }
 }
-

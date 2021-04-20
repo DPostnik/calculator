@@ -8,7 +8,7 @@ import {AppService} from "../../shared/service/app.service";
 })
 export class CalculatorComponent implements OnInit {
 
-  public value = '';
+  public value = '0';
   constructor(public service: AppService) { }
 
   ngOnInit(): void {
