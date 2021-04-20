@@ -12,16 +12,12 @@
 
 - [x] Разделение логики и отображения
 
-- [ ] Обработка тест кейсов (в процессе)
+- [x] Обработка тест кейсов (в процессе)
 
-- [x] Хостинг на Firebase
+- [x] Деплой на Firebase
 
-- [ ] Написание backend-части на node.js
-
-- [ ] Работа с MongoDB
-
-- [ ] Прием и передача данных между front & back частями
+- [x] Подключение к базе данных для хранении истории
 
 > link to calculator: https://calculator-d4670.web.app/ or https://calculator-d4670.firebaseapp.com/
 
-### Для выполнения задания используются Angular Framework, Node.js(Express), MongoDB, Firebase
+### Для выполнения задания используются Angular Framework, Firebase, RxJS
