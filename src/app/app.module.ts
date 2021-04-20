@@ -5,6 +5,8 @@ import { AppComponent } from './app.component';
 import { CalculatorComponent } from './components/calculator/calculator.component';
 import { ButtonComponent } from './components/button/button.component';
 import { DisplayComponent } from './components/display/display.component';
+import {HttpClientModule} from "@angular/common/http";
+import {DataService} from "./shared/service/data.service";
 
 @NgModule({
   declarations: [
@@ -14,9 +16,10 @@ import { DisplayComponent } from './components/display/display.component';
     DisplayComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

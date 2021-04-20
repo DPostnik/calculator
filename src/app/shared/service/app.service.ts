@@ -41,6 +41,10 @@ export class AppService {
   private dataString = '';
 
   handleData(value: string){
+    if(value=='0'&&this.op=='/'){
+      const resultStr = this.num1 + this.op + this.num2;
+      return resultStr.slice(0,15);
+    }
     this.dataString +=value;
     let resultStr = '';
     if(value != 'MRC'){ // если не mrc очищаем счётчик
@@ -150,6 +154,15 @@ export class AppService {
     if(nextOperation == '='){
       this.op = '';
       this.numbersCounter = 1;
+      const data: Data = {
+        value: this.dataString+eval(this.num1),
+        date: new Date()
+      }
+      this.data.sendData(data)
+        .subscribe( ()=>{
+          console.log('success');
+        });
+      this.dataString = this.num1;
     }
     else{
       this.op = nextOperation;
