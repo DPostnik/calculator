@@ -1,0 +1,8 @@
+<div class="window">
+  <p *ngIf="!data">some data</p>
+  <p *ngFor="let data of this.data">
+    value: {{data.value}}<br>
+    date: {{data.date | date:'M/d/yy, h:mm:ss a'}}
+  </p>
+  <button class="btn" (click)="removeAll()">delete all</button>
+</div>

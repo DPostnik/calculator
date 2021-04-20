@@ -159,8 +159,8 @@ export class AppService {
         date: new Date()
       }
       this.data.sendData(data)
-        .subscribe( ()=>{
-          console.log('success');
+        .subscribe( (data)=>{
+         console.log(data)
         });
       this.dataString = this.num1;
     }

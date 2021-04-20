@@ -7,13 +7,15 @@ import { ButtonComponent } from './components/button/button.component';
 import { DisplayComponent } from './components/display/display.component';
 import {HttpClientModule} from "@angular/common/http";
 import {DataService} from "./shared/service/data.service";
+import { HistoryComponent } from './components/history/history.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalculatorComponent,
     ButtonComponent,
-    DisplayComponent
+    DisplayComponent,
+    HistoryComponent
   ],
   imports: [
     BrowserModule,
